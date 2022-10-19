@@ -30,7 +30,6 @@ export interface PulldownProps {
     error?: string;
     allowClear?: boolean;
     allowSearch?: boolean;
-    sort?: ((x: OptionType, y: OptionType) => number) | 'asce' | 'desc';
     initValue?: OptionType;
     loading?: boolean;
     initOpen?: boolean;
@@ -68,7 +67,7 @@ const PullDownItem: React.FC<PullDownItemProps> = ({
 
 const Pulldown: React.FC<PulldownProps> = ({
     initValue, options, placeholder, onChange, allowClear, icon, loading, initOpen, error,
-    disabled, id, label, allowSearch, sort, loadMore, handleLoadMore,
+    disabled, id, label, allowSearch, loadMore, handleLoadMore,
 }) => {
     const mainRef = useRef<HTMLDivElement>(null!);
     const inputRef = useRef<HTMLInputElement | null>(null);
@@ -86,32 +85,16 @@ const Pulldown: React.FC<PulldownProps> = ({
         }
     }, [open, disabled]);
 
-    const sortedOptions = useMemo(() => {
-        const result = [...options];
-
-        if (typeof sort === 'function') {
-            result.sort(sort);
-        }
-        if (sort === 'asce') {
-            result.sort((a, b) => (a.label.localeCompare(b.label)));
-        }
-        if (sort === 'desc') {
-            result.sort((a, b) => (b.label.localeCompare(a.label)));
-        }
-
-        return result;
-    }, [options, sort]);
-
     const resultList = useMemo(() => {
         if (allowSearch) {
-            const result = sortedOptions.filter(
+            const result = options.filter(
                 (item) => item.label.toLowerCase().includes(searchTerm.toLowerCase()),
             );
 
             return result;
         }
-        return sortedOptions;
-    }, [searchTerm, sortedOptions, allowSearch]);
+        return options;
+    }, [searchTerm, options, allowSearch]);
 
     const selectedOption = useMemo(() => [...options, initValue].find(
         (item) => item?.value === value,

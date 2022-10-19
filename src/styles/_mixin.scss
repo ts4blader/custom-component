@@ -1,0 +1,18 @@
+@function rem($pixel) {
+    @if not $pixel {
+        @error 'Missing argument $pixel';
+    }
+
+    @return ($pixel/16)+rem;
+}
+
+@mixin flex($justify: center, $align: center) {
+    align-items: $align;
+    display: flex;
+    justify-content: $justify;
+}
+
+@mixin typo($fs: 16, $lh: 24) {
+    font-size: rem($fs);
+    line-height: rem($lh);
+}

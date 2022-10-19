@@ -1,0 +1,127 @@
+.pulldown {
+    $root: &;
+    position: relative;
+
+    &_head {
+        @include flex(flex-start, center);
+
+        padding: rem(12) rem(16);
+        border-radius: rem(8);
+        border: 1px solid $cyber-grape;
+        cursor: pointer;
+
+        >* {
+            flex-shrink: 0;
+        }
+    }
+
+    &_body {
+
+        position: absolute;
+        width: 100%;
+        overflow: auto;
+        top: 120%;
+        border-radius: rem(8);
+        border: 1px solid $cyber-grape;
+        max-height: rem(300);
+
+        //animation
+        transition: all $transition $expoOut;
+        visibility: hidden;
+        opacity: 0;
+        transform: translateY(rem(50));
+    }
+
+    &_item {
+        padding: rem(12) rem(16);
+        cursor: pointer;
+
+        &[data-active=true] {
+            background-color: $cyber-grape;
+            color: $white;
+        }
+    }
+
+    &_icon,
+    &_loadingIcon {
+        margin-right: rem(12);
+    }
+
+    &_caretIcon {
+        margin-left: rem(12);
+        transition: transform $transition $expoOut;
+        transform: rotate(180deg);
+    }
+
+    &_headline {
+        @include typo(16, 24);
+        flex-grow: 1;
+    }
+
+    &_placeholder {
+        color: $gray-x11;
+    }
+
+    &_input {
+        @include typo(16, 24);
+
+        flex-grow: 1;
+        padding: 0;
+        color: $davys-grey;
+        border-width: 0;
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    &_icon,
+    &_clearIcon,
+    &_loadingIcon,
+    &_caretIcon {
+        width: rem(24);
+        height: rem(24);
+
+        img {
+            max-width: 100%;
+        }
+    }
+
+    &_error {
+        @include typo(14, 20);
+
+        margin-top: rem(8);
+        color: $sinopia;
+    }
+
+    &_loadMore {
+        @include flex();
+        padding: rem(12) rem(16);
+    }
+
+
+    &[data-open=true] {
+        #{$root}_body {
+            visibility: visible;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #{$root}_caretIcon {
+            transform: rotate(0);
+        }
+    }
+
+    &[data-error=true] {
+        #{$root}_head {
+            border-color: $sinopia;
+        }
+    }
+
+    &[data-loading=true],
+    &[data-disabled=true] {
+        opacity: 0.7;
+        pointer-events: none;
+    }
+
+}

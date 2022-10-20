@@ -214,6 +214,7 @@ const MultiSelect: React.FC<MultiSelectProps> = ({
                     <div className="multiSelect_optionList">
                         {resultData.map((item, index) => (
                             <Item
+                                key={`optionList-${item.value}`}
                                 focus={focus === index}
                                 active={!!selectedOption.find((el) => el.value === item.value)}
                                 handleClick={() => handleChoose(item)}

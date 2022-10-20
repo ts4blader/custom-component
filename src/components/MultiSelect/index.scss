@@ -1,0 +1,148 @@
+.multiSelect {
+
+    $root: &;
+    position: relative;
+    width: 100%;
+    border-radius: rem(8);
+    border: 1px solid $cyber-grape;
+
+    &_headline {
+        padding: rem(8) rem(16);
+
+        display: flex;
+        align-items: center;
+
+        >* {
+            margin-right: rem(16);
+
+            &:last-child {
+                margin-right: 0;
+            }
+        }
+
+    }
+
+    &_badgeList {
+
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: rem(4);
+
+        flex-grow: 1;
+    }
+
+    &_badge {
+        cursor: pointer;
+        white-space: nowrap;
+        padding: rem(4) rem(6);
+        border-radius: rem(4);
+        color: $white;
+        font-weight: 700;
+        background-color: $cyber-grape;
+    }
+
+
+    &_clear,
+    &_caret,
+    &_prefixIcon,
+    &_loading {
+        img {
+            width: rem(20);
+            height: rem(20);
+        }
+    }
+
+    &_caret {
+        img {
+            transform: rotate(180deg);
+            transition: transform $transition ease;
+        }
+    }
+
+    &_placeholder {
+        text-align: left;
+        flex-grow: 1;
+        color: rgb($raisin-black, 0.4);
+
+    }
+
+    &_search {
+        @include flex();
+
+        input {
+            border-radius: rem(8);
+            border: 1px solid rgb($raisin-black, 0.4);
+            margin: rem(8);
+            padding: rem(8) rem(16);
+        }
+
+
+    }
+
+
+    &_content {
+        position: absolute;
+        top: 200%;
+        left: 0;
+        width: 100%;
+        max-height: rem(300);
+        overflow: auto;
+
+        border: inherit;
+        border-radius: inherit;
+        opacity: 0;
+        pointer-events: none;
+        transition: all $transition ease;
+    }
+
+    &_noData {
+
+        padding: rem(40);
+        text-align: center;
+
+    }
+
+    &_option {
+        padding: rem(8) rem(16);
+        text-align: left;
+
+        &[data-focus=true] {
+            background-color: $cyber-grape;
+            color: $white;
+        }
+
+        &[data-active=true] {
+            background-color: $amazon;
+            color: $white;
+
+            &[data-focus=true] {
+                background-color: $british-racing-green;
+            }
+        }
+    }
+
+
+    &[data-open=true] {
+
+        #{$root}_content {
+            top: calc(100% + rem(12));
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        #{$root}_caret {
+            img {
+                transform: rotate(0);
+            }
+        }
+
+    }
+
+    &[data-disabled=true] {
+        pointer-events: none;
+        opacity: 0.7;
+    }
+
+
+}

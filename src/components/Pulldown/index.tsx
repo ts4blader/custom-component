@@ -4,7 +4,7 @@ import React, {
 
 import iconCaret from 'assets/icons/ic_caret.png';
 import iconClear from 'assets/icons/ic_clear.png';
-import iconLoading from 'assets/icons/ic_loading.gif';
+import iconLoading from 'assets/icons/ic_loading.svg';
 import useClickOutside from 'hooks/useClickOutside';
 import useScrollInfinite from 'hooks/useInfinityScroll';
 

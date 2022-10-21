@@ -1,162 +1,36 @@
-import React, {
-    useState, useCallback, useRef, useMemo, useEffect,
-} from 'react';
+import React, { useCallback } from 'react';
 
 import iconCaret from 'assets/icons/ic_caret.png';
 import iconClear from 'assets/icons/ic_clear.png';
 import iconLoading from 'assets/icons/ic_loading.svg';
-import useClickOutside from 'hooks/useClickOutside';
+import PullDownItem from './item';
 import useScrollInfinite from 'hooks/useInfinityScroll';
+import usePulldown, { UsePulldownType } from './usePulldown';
 
-type OptionType = {
-    label: string;
-    value: string;
-}
-
-interface PullDownItemProps {
-    active: boolean;
-    onHover: () => void;
-    onClick: () => void;
-    label: string;
-}
-
-export interface PulldownProps {
-    options: OptionType[];
-    id?: string;
+export interface PulldownProps extends UsePulldownType {
     label?: string;
-    disabled?: boolean;
-    placeholder?: string;
+    id?: string;
     icon?: string;
-    error?: string;
-    allowClear?: boolean;
-    allowSearch?: boolean;
-    initValue?: OptionType;
-    loading?: boolean;
-    initOpen?: boolean;
-    onChange?: (options?: OptionType) => void;
+    placeholder?: string;
     loadMore?: boolean;
     handleLoadMore?: () => void;
+    loading?: boolean;
+    disabled?: boolean;
+    error?: boolean;
 }
 
-const PullDownItem: React.FC<PullDownItemProps> = ({
-    active, onHover, onClick, label,
-}) => {
-    const mainRef = useRef<HTMLDivElement>(null!);
-
-    useEffect(() => {
-        if (active) {
-            mainRef.current.scrollIntoView({
-                block: 'nearest',
-                behavior: 'smooth',
-            });
-        }
-    }, [active]);
-
-    return (
-        <div
-            ref={mainRef}
-            className='pulldown_item'
-            onClick={onClick}
-            onMouseMove={onHover}
-            data-active={active}
-        >
-            {label}
-        </div>
-    );
-};
 
 const Pulldown: React.FC<PulldownProps> = ({
-    initValue, options, placeholder, onChange, allowClear, icon, loading, initOpen, error,
-    disabled, id, label, allowSearch, loadMore, handleLoadMore,
+    label, id, icon, loadMore,
+    loading, disabled, error, placeholder, handleLoadMore, ...rest
 }) => {
-    const mainRef = useRef<HTMLDivElement>(null!);
-    const inputRef = useRef<HTMLInputElement | null>(null);
 
-    const [open, setOpen] = useState((!disabled && initOpen) || false);
-    const [value, setValue] = useState(initValue?.value);
-    const [searchTerm, setSearchTerm] = useState('');
-    const [active, setActive] = useState(0);
-
-    const { setNode } = useScrollInfinite(handleLoadMore);
-
-    const handleToggle = useCallback(() => {
-        if (!disabled) {
-            setOpen(!open);
-        }
-    }, [open, disabled]);
-
-    const resultList = useMemo(() => {
-        if (allowSearch) {
-            const result = options.filter(
-                (item) => item.label.toLowerCase().includes(searchTerm.toLowerCase()),
-            );
-
-            return result;
-        }
-        return options;
-    }, [searchTerm, options, allowSearch]);
-
-    const selectedOption = useMemo(() => [...options, initValue].find(
-        (item) => item?.value === value,
-    ), [value, options, initValue]);
-
-    const selectActiveItem = useCallback(() => {
-        const validIndex = Math.max(Math.min(resultList.length - 1, active), 0);
-
-        setValue(resultList[validIndex].value);
-        setOpen(false);
-        //* blur input
-        inputRef.current?.blur();
-        //* set search term
-        setSearchTerm(resultList[validIndex].label || '');
-
-        setActive(0);
-    }, [resultList, active]);
-
-    const handleSelect = useCallback(() => {
-        selectActiveItem();
-    }, [selectActiveItem]);
-
-    const handleClear = useCallback(() => {
-        setValue('');
-        setSearchTerm('');
-        if (onChange) onChange(undefined);
-
-        inputRef.current?.focus();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    const handleFocus = useCallback(() => {
-        setSearchTerm('');
-        setOpen(true);
-    }, []);
-
-    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(e.target.value);
-        setActive(0);
-    }, []);
-
-    const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-        switch (e.code) {
-            case 'ArrowDown':
-                e.preventDefault();
-                setActive(Math.min(active + 1, resultList.length - 1));
-                break;
-
-            case 'ArrowUp':
-                e.preventDefault();
-                setActive(Math.max(active - 1, 0));
-                break;
-
-            case 'Enter':
-                e.preventDefault();
-                selectActiveItem();
-                break;
-
-            default:
-                break;
-        }
-    }, [active, resultList, selectActiveItem]);
+    const {
+        handleChange, handleClear, handleFocus,
+        handleKeyDown, handleSelect, handleToggle, selectedOption,
+        open, inputRef, mainRef, allowClear, allowSearch, searchTerm,
+        resultList, active, setActive
+    } = usePulldown(rest);
 
     const PlainHeadText = useCallback(() => (
         placeholder && !selectedOption
@@ -164,16 +38,7 @@ const Pulldown: React.FC<PulldownProps> = ({
             : <div className="pulldown_text">{selectedOption?.label}</div>
     ), [placeholder, selectedOption]);
 
-    useClickOutside(mainRef, () => {
-        if (open) setOpen(false);
-        setSearchTerm(selectedOption?.label || '');
-    });
-
-    //* on change binding
-    useEffect(() => {
-        if (onChange && selectedOption) onChange(selectedOption);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedOption]);
+    const { setNode } = useScrollInfinite(handleLoadMore);
 
     return (
         <div
@@ -263,18 +128,6 @@ const Pulldown: React.FC<PulldownProps> = ({
             {error && <div className="pulldown_error">{error}</div>}
         </div>
     );
-};
-
-Pulldown.defaultProps = {
-    placeholder: undefined,
-    allowClear: false,
-    allowSearch: false,
-    icon: undefined,
-    initValue: undefined,
-    onChange: undefined,
-    loading: false,
-    initOpen: false,
-    error: undefined,
 };
 
 export default Pulldown;

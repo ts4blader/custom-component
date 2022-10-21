@@ -8,7 +8,7 @@ import OPTIONS from 'assets/dataDummy/options'
 import iconDebian from 'assets/icons/ic_debian.png';
 
 export default {
-    title: 'Components/molecules/Pulldown',
+    title: 'Components/Pulldown',
     component: Pulldown,
     argTypes: {},
     args: {

@@ -1,0 +1,58 @@
+.otpInput {
+    $root: &;
+
+    width: max-content;
+
+    &_inner {
+        @include flex(flex-start, center);
+        gap: rem(20);
+    }
+
+    &_input {
+
+        input {
+            cursor: pointer;
+            text-align: center;
+            font-size: rem(24);
+            font-weight: 700;
+
+            border-radius: rem(8);
+            width: rem(50);
+            height: rem(50);
+            color: $xanadu;
+            border: 1px solid currentColor;
+
+            &::placeholder {
+                color: $gray-x11;
+            }
+
+            &:focus {
+                outline: none;
+                color: $plum;
+                border: 1px solid currentColor;
+            }
+
+        }
+
+    }
+
+    &_error {
+        margin-top: rem(20);
+        color: $sinopia;
+        text-align: center;
+    }
+
+    &[data-error=true] {
+        #{$root}_input {
+            input {
+                border-color: $sinopia;
+            }
+        }
+    }
+
+    &[data-disabled=true] {
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+}

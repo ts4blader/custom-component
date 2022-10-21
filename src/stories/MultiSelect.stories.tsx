@@ -6,7 +6,7 @@ import OPTIONS from 'assets/dataDummy/options';
 import 'styles/main.scss'
 
 export default {
-    title: 'Components/molecules/MultiSelect',
+    title: 'Components/MultiSelect',
     component: MultiSelect,
     args: {
         disabled: false,

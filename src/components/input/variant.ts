@@ -1,9 +1,10 @@
 import { cva } from "class-variance-authority";
 
-const wrapper = cva('inline-flex items-center gap-4 rounded-md', {
+const wrapper = cva('inline-flex items-center gap-4 rounded-md disabled:opacity-60', {
   variants: {
     theme: {
-      default: ['border', 'border-slate-300', 'focus-within:border-blue-400', 'focus-within:ring-2 focus-within:ring-blue-200']
+      default: ['border', 'border-slate-300', 'focus-within:border-blue-400', 'focus-within:ring-2 focus-within:ring-blue-200'],
+      borderless: ['border-none']
     },
     size: {
       sm: ['h-6 px-2 py-1'],

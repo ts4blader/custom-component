@@ -10,6 +10,7 @@ interface InputProps extends MixedInputType {
   className?: string
   affix?: React.ReactNode
   suffix?: React.ReactNode
+  error?: boolean
 }
 
 type MixedAddonType = Omit<React.ComponentProps<"span">, "className"> &
@@ -20,9 +21,15 @@ interface InputAddonProps extends MixedAddonType {
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, affix, suffix, size, theme, ...rest }, ref) => {
+  ({ className, affix, suffix, size, theme, error, ...rest }, ref) => {
     return (
-      <div className={cn("input-wrapper", wrapper({ className, size, theme }))}>
+      <div
+        className={cn(
+          "input-wrapper",
+          wrapper({ className, size, theme }),
+          error && "!border-red-400 !ring-2 !ring-red-200"
+        )}
+      >
         {suffix && <span className="shrink-0">{suffix}</span>}
         <input className={input({ size })} ref={ref} {...rest} />
         {affix && <span className="shrink-0">{affix}</span>}
@@ -30,8 +37,6 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
     )
   }
 )
-
-Input.displayName = "Input"
 
 export const InputAddon = React.memo(
   ({ className, size, theme, position, ...rest }: InputAddonProps) => {

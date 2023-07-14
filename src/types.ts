@@ -1,0 +1,1 @@
+export type ComponentUnion = keyof React.JSX.IntrinsicElements | React.JSXElementConstructor<any>

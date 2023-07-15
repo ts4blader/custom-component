@@ -1,6 +1,6 @@
 import { cva } from "class-variance-authority";
 
-const wrapper = cva('inline-flex items-center gap-4 rounded-md disabled:opacity-60', {
+const wrapper = cva('inline-flex items-center gap-4 rounded-md', {
   variants: {
     theme: {
       default: ['border', 'border-slate-300', 'focus-within:border-blue-400', 'focus-within:ring-2 focus-within:ring-blue-200'],

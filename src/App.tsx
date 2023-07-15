@@ -1,3 +1,4 @@
+import Button from "components/button"
 import FormItem from "components/form-item"
 import Input, { InputAddon } from "components/input"
 import { Mail } from "lucide-react"
@@ -22,6 +23,7 @@ function App() {
           </div>
           <Input placeholder="Place text here" theme="borderless" />
           <Input placeholder="Place text here" error />
+          <Input placeholder="Place text here" disabled />
         </div>
       </section>
 
@@ -40,6 +42,23 @@ function App() {
           <FormItem label="With id">
             {(id) => <Input id={id} placeholder="with id" />}
           </FormItem>
+        </div>
+      </section>
+
+      <section className="container">
+        <h2 className="my-6 text-2xl">Buttons</h2>
+        <div className="flex flex-wrap gap-6">
+          <Button size="sm">Button</Button>
+          <Button>Button</Button>
+          <Button size="lg">Button</Button>
+          <Button size="xl">Button</Button>
+        </div>
+
+        <div className="flex flex-wrap gap-6 mt-2">
+          <Button theme="danger">Button</Button>
+          <Button>Button</Button>
+          <Button theme="default-borderred">Button</Button>
+          <Button theme="danger-borderred">Button</Button>
         </div>
       </section>
     </main>

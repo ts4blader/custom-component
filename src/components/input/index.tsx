@@ -27,7 +27,8 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
         className={cn(
           "input-wrapper",
           wrapper({ className, size, theme }),
-          error && "!border-red-400 !ring-2 !ring-red-200"
+          error && "!border-red-400 !ring-2 !ring-red-200",
+          rest.disabled && "!bg-slate-100 pointer-events-none"
         )}
       >
         {suffix && <span className="shrink-0">{suffix}</span>}

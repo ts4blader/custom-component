@@ -6,7 +6,7 @@ interface FormItemProps<T> extends React.ComponentProps<ComponentUnion> {
   error?: React.ReactNode
   label?: React.ReactNode
   as?: T
-  children: React.ReactNode | ((id: string) => React.ReactNode)
+  children: React.ReactElement | ((id: string) => React.ReactNode)
   labelClass?: string
   errorClass?: string
 }
@@ -21,7 +21,10 @@ const FormItem = ({
 }: FormItemProps<ComponentUnion>) => {
   const id = useId()
   const Component = as
-  const Children = typeof children === "function" ? children(id) : children
+  const Children =
+    typeof children === "function"
+      ? children(id)
+      : React.cloneElement(children, { id })
 
   return (
     <Component>

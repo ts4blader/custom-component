@@ -1,6 +1,8 @@
+import { DndContext } from "@dnd-kit/core"
 import Button from "components/button"
 import FormItem from "components/form-item"
 import Input, { InputAddon } from "components/input"
+import TestDND from "dnd"
 import { Mail } from "lucide-react"
 
 function App() {
@@ -60,6 +62,12 @@ function App() {
           <Button theme="default-borderred">Button</Button>
           <Button theme="danger-borderred">Button</Button>
         </div>
+      </section>
+
+      <section className="container pt-10">
+        <DndContext>
+          <TestDND />
+        </DndContext>
       </section>
     </main>
   )

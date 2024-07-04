@@ -2,13 +2,8 @@ import { cva } from "class-variance-authority"
 
 export const wrapperVariant = cva([
   "checkbox-wrapper",
-  "relative inline-flex items-center leading-[1]",
+  "inline-flex items-center leading-[1] relative",
   "aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
-])
-
-export const inputVariant = cva([
-  "checkbox-input",
-  "absolute top-0 left-0 w-0 h-0 opacity-0 peer",
 ])
 
 export const iconVariant = cva(["checkbox-icon", "abs-center text-white"], {

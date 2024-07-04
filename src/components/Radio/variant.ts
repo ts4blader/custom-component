@@ -6,11 +6,6 @@ export const wrapperVariant = cva([
   "aria-disabled:opacity-50 aria-disabled:cursor-not-allowed aria-disabled:pointer-events-none",
 ])
 
-export const inputVariant = cva([
-  "radio-input",
-  "absolute top-0 left-0 w-0 h-0 opacity-0 peer",
-])
-
 export const boxVariant = cva(
   [
     "radio-box",

@@ -1,73 +1,34 @@
-import { createContext, memo, useCallback, useContext } from "react"
-import { Checkbox, CheckboxProps } from "."
-import { VariantProps } from "class-variance-authority"
-import { boxVariant } from "./variant"
+import { CheckboxProps } from "."
+import { boxVariant, iconVariant, wrapperVariant } from "./variant"
+import { Picker, PickerSelector } from "components/Picker"
+import { cn } from "utils/helper"
+import { Check } from "lucide-react"
 
-//* context
-type CheckboxGroupContextType = {
-  handleChange: (value: string) => void
-} & Omit<CheckboxGroupProps, "children">
+//* group
+const CheckboxGroup = Picker.Multiple
 
-const CheckboxGroupContext = createContext<CheckboxGroupContextType | null>(
-  null
-)
-
-const useCheckboxGroupContext = () => {
-  const context = useContext(CheckboxGroupContext)
-  if (!context) {
-    throw new Error(
-      "useCheckboxContext must be used within an CheckboxGroupProvider"
-    )
-  }
-
-  return context
-}
-
-//* Checkbox group
-type CheckboxGroupProps = {
-  value: string[]
-  onChange: (value: string[]) => void
-  children: React.ReactNode
-} & VariantProps<typeof boxVariant>
-
-const CheckboxGroup = memo((props: CheckboxGroupProps) => {
-  const { value, onChange, children, ...rest } = props
-
-  const handleChange = useCallback(
-    (input: string) => {
-      if (value.includes(input)) {
-        onChange(value.filter((item) => item !== input))
-        return
-      }
-
-      const valueSet = new Set([...value, input])
-      onChange(Array.from(valueSet))
-    },
-    [value, onChange]
-  )
-
+//* item
+const CheckboxGroupItem = ({
+  theme,
+  size,
+  children,
+  wrapperProps,
+  ...rest
+}: React.PropsWithoutRef<CheckboxProps>) => {
   return (
-    <CheckboxGroupContext.Provider
-      value={{ handleChange, value, onChange, ...rest }}
+    <PickerSelector
+      wrapperProps={{
+        className: cn(wrapperVariant(), wrapperProps?.className),
+        ...wrapperProps,
+      }}
+      {...rest}
     >
+      <div className={cn(boxVariant({ theme, size }))}>
+        <Check className={cn(iconVariant({ size }))} />
+      </div>
       {children}
-    </CheckboxGroupContext.Provider>
-  )
-})
-
-//* Checkbox group item
-const CheckboxGroupItem = (props: React.PropsWithoutRef<CheckboxProps>) => {
-  const { theme, size, handleChange, value } = useCheckboxGroupContext()
-
-  return (
-    <Checkbox
-      theme={theme}
-      size={size}
-      onChange={(e) => handleChange(e.target.value)}
-      checked={value.includes(props.value)}
-      {...props}
-    />
+    </PickerSelector>
   )
 }
 
-export { CheckboxGroup, CheckboxGroupItem, useCheckboxGroupContext }
+export { CheckboxGroup, CheckboxGroupItem }

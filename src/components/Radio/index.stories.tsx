@@ -3,6 +3,8 @@ import { Radio } from "."
 import { useState } from "react"
 import { RadioGroup, RadioGroupItem } from "./group"
 import { RadioForm, RadioFormItem } from "./form"
+import { FormProvider, useForm } from "react-hook-form"
+import { usePickerSingle } from "components/Picker/hook"
 
 const sizes = ["sm", "md", "lg"] as const
 const themes = ["default", "forest"] as const
@@ -45,17 +47,12 @@ export const Default: Story = {
 }
 
 export const Group = () => {
-  const [value, setValue] = useState<Theme>("default")
-  const [size, setSize] = useState<Size>("md")
+  const themeState = usePickerSingle({ initialValue: "default" as Theme })
+  const sizeState = usePickerSingle({ initialValue: "md" as Size })
 
   return (
     <>
-      <RadioGroup
-        theme={value}
-        size={size}
-        value={value}
-        onChange={(data) => setValue(data as Theme)}
-      >
+      <RadioGroup value={themeState.value} onChange={themeState.handleChange}>
         <div className="flex items-center space-x-5">
           {themes.map((item, index) => (
             <RadioGroupItem key={index} value={item}>
@@ -65,12 +62,7 @@ export const Group = () => {
         </div>
       </RadioGroup>
 
-      <RadioGroup
-        theme={value}
-        size={size}
-        value={size}
-        onChange={(data) => setSize(data as Size)}
-      >
+      <RadioGroup value={sizeState.value} onChange={sizeState.handleChange}>
         <div className="flex items-center mt-6 space-x-5">
           {sizes.map((item, index) => (
             <RadioGroupItem key={index} value={item}>
@@ -84,14 +76,23 @@ export const Group = () => {
 }
 
 export const Form = () => {
+  const form = useForm<{ color: string }>()
+
   return (
-    <RadioForm name="color" initValue="green">
-      <div className="flex items-center space-x-5">
-        <RadioFormItem value="green">green</RadioFormItem>
-        <RadioFormItem value="yellow">yellow</RadioFormItem>
-        <RadioFormItem value="blue">blue</RadioFormItem>
-        <RadioFormItem value="red">red</RadioFormItem>
-      </div>
-    </RadioForm>
+    <FormProvider {...form}>
+      <RadioForm name="color">
+        <form
+          onSubmit={form.handleSubmit((data) => console.log(data))}
+          className="flex items-center space-x-5"
+        >
+          <RadioFormItem value="green">green</RadioFormItem>
+          <RadioFormItem value="yellow">yellow</RadioFormItem>
+          <RadioFormItem value="blue">blue</RadioFormItem>
+          <RadioFormItem value="red">red</RadioFormItem>
+
+          <button>Submit</button>
+        </form>
+      </RadioForm>
+    </FormProvider>
   )
 }

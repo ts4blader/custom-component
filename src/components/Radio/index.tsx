@@ -1,7 +1,7 @@
-import React, { memo } from "react"
+import React, { forwardRef, memo } from "react"
 import { cn } from "utils/helper"
 import { VariantProps } from "class-variance-authority"
-import { boxVariant, inputVariant, wrapperVariant } from "./variant"
+import { boxVariant, wrapperVariant } from "./variant"
 
 //* radio
 export type RadioProps = {
@@ -12,27 +12,26 @@ export type RadioProps = {
   VariantProps<typeof boxVariant>
 
 const Radio = memo(
-  ({
-    id,
-    className,
-    theme,
-    size,
-    children,
-    wrapperProps,
-    ...rest
-  }: RadioProps) => {
-    return (
-      <label
-        aria-disabled={rest.disabled}
-        className={cn(wrapperVariant(), wrapperProps?.className)}
-        {...wrapperProps}
-      >
-        <input className={cn(inputVariant())} type="radio" {...rest} />
-        <span className={cn(boxVariant({ theme, size }), className)} />
-        {children}
-      </label>
-    )
-  }
+  forwardRef<HTMLInputElement, RadioProps>(
+    ({ className, theme, size, children, wrapperProps, ...rest }, ref) => {
+      return (
+        <label
+          aria-disabled={rest.disabled}
+          className={cn(wrapperVariant(), wrapperProps?.className)}
+          {...wrapperProps}
+        >
+          <input
+            ref={ref}
+            className="hidden-input peer"
+            type="radio"
+            {...rest}
+          />
+          <span className={cn(boxVariant({ theme, size }), className)} />
+          {children}
+        </label>
+      )
+    }
+  )
 )
 
 export { Radio }

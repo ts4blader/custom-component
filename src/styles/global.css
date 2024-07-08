@@ -1,5 +1,3 @@
-@import "layer.css";
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -23,4 +21,18 @@ body {
     "Open Sans",
     "Helvetica Neue",
     sans-serif;
+}
+
+/* ---------------------------------- */
+/*                LAYER               */
+/* ---------------------------------- */
+
+@layer components {
+  .abs-center {
+    @apply absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2;
+  }
+
+  .hidden-input {
+    @apply absolute top-0 left-0 w-0 h-0 opacity-0;
+  }
 }

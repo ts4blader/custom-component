@@ -1,6 +1,28 @@
 import React, { ChangeEvent, forwardRef, memo, useMemo } from "react"
 import { createSharedContext } from "utils/shared-context"
 
+//* skin
+export type PickerSkinProps = {
+  children: React.ReactNode
+  wrapperProps?: React.ComponentProps<"label">
+} & React.ComponentProps<"input">
+
+const PickerSkin = forwardRef<HTMLInputElement, PickerSkinProps>(
+  ({ children, wrapperProps, ...rest }, ref) => {
+    return (
+      <label
+        aria-selected={rest.checked}
+        aria-disabled={rest.disabled}
+        {...wrapperProps}
+      >
+        <input ref={ref} className="hidden-input peer" {...rest} />
+        {children}
+      </label>
+    )
+  }
+)
+
+//* picker
 export enum PickerType {
   single = "radio",
   multiple = "checkbox",
@@ -30,47 +52,34 @@ const Picker = ({
 }
 
 //* selector
-type PickerSelectorProps = {
-  children: React.ReactNode
-  wrapperProps?: React.ComponentProps<"label">
-} & React.ComponentProps<"input">
+type PickerSelectorProps = PickerSkinProps
 
 const PickerSelector = memo(
-  forwardRef<HTMLInputElement, PickerSelectorProps>(
-    ({ children, wrapperProps, ...rest }, ref) => {
-      const { onChange, value, type } = usePickerContext()
+  forwardRef<HTMLInputElement, PickerSelectorProps>(({ ...rest }, ref) => {
+    const { onChange, value, type } = usePickerContext()
 
-      const isChecked = useMemo(() => {
-        if (type === PickerType.multiple && Array.isArray(value)) {
-          return value.includes(rest.value)
-        }
+    const isChecked = useMemo(() => {
+      if (type === PickerType.multiple && Array.isArray(value)) {
+        return value.includes(rest.value)
+      }
 
-        if (type === PickerType.single && !Array.isArray(value)) {
-          return value === rest.value
-        }
+      if (type === PickerType.single && !Array.isArray(value)) {
+        return value === rest.value
+      }
 
-        return false
-      }, [value, rest.value])
+      return false
+    }, [value, rest.value])
 
-      return (
-        <label
-          aria-disabled={rest.disabled}
-          aria-selected={isChecked}
-          {...wrapperProps}
-        >
-          <input
-            ref={ref}
-            checked={isChecked}
-            type={type}
-            onChange={onChange}
-            className="hidden-input peer"
-            {...rest}
-          />
-          {children}
-        </label>
-      )
-    }
-  )
+    return (
+      <PickerSkin
+        ref={ref}
+        checked={isChecked}
+        type={type}
+        onChange={onChange}
+        {...rest}
+      />
+    )
+  })
 )
 
 Picker.Single = memo((props: PickerProps) => (
@@ -80,4 +89,4 @@ Picker.Multiple = memo((props: PickerProps) => (
   <Picker type={PickerType.multiple} {...props} />
 ))
 
-export { Picker, usePickerContext, PickerSelector }
+export { Picker, usePickerContext, PickerSelector, PickerSkin }

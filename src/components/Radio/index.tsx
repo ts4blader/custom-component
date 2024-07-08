@@ -10,7 +10,7 @@ export type RadioProps = Omit<PickerSkinProps, "type" | "size"> &
 
 const Radio = memo(
   forwardRef<HTMLInputElement, RadioProps>(
-    ({ className, theme, size, children, wrapperProps, ...rest }, ref) => {
+    ({ theme, size, children, wrapperProps, ...rest }, ref) => {
       return (
         <PickerSkin
           ref={ref}
@@ -21,7 +21,7 @@ const Radio = memo(
           }}
           {...rest}
         >
-          <span className={cn(boxVariant({ theme, size }), className)} />
+          <span className={cn(boxVariant({ theme, size }))} />
           {children}
         </PickerSkin>
       )

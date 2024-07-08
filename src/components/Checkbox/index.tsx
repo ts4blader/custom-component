@@ -12,7 +12,7 @@ export type CheckboxProps = Omit<PickerSkinProps, "size" | "type"> &
 
 const Checkbox = memo(
   forwardRef<HTMLInputElement, CheckboxProps>(
-    ({ className, theme, size, children, wrapperProps, ...rest }, ref) => {
+    ({ theme, size, children, wrapperProps, ...rest }, ref) => {
       return (
         <PickerSkin
           ref={ref}

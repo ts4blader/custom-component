@@ -8,7 +8,7 @@ export type PickerSkinProps = {
 } & React.ComponentProps<"input">
 
 const PickerSkin = forwardRef<HTMLInputElement, PickerSkinProps>(
-  ({ children, wrapperProps, ...rest }, ref) => {
+  ({ className, children, wrapperProps, ...rest }, ref) => {
     return (
       <label
         aria-selected={rest.checked}

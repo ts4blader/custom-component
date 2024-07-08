@@ -1,11 +1,5 @@
-import React, {
-  ChangeEvent,
-  createContext,
-  forwardRef,
-  memo,
-  useContext,
-  useMemo,
-} from "react"
+import React, { ChangeEvent, forwardRef, memo, useMemo } from "react"
+import { createSharedContext } from "utils/shared-context"
 
 export enum PickerType {
   single = "radio",
@@ -19,16 +13,8 @@ export type PickerProps = {
   children: React.ReactNode
 }
 
-//* context
-const PickerContext = createContext<Omit<PickerProps, "children"> | null>(null)
-
-const usePickerContext = () => {
-  const context = useContext(PickerContext)
-  if (!context) {
-    throw new Error("usePickerContext must be used within an PickerProvider")
-  }
-  return context
-}
+const [usePickerContext, PickerProvider] =
+  createSharedContext<Omit<PickerProps, "children">>("picker")
 
 const Picker = ({
   onChange,
@@ -37,9 +23,9 @@ const Picker = ({
   children,
 }: PickerProps) => {
   return (
-    <PickerContext.Provider value={{ onChange, value, type }}>
+    <PickerProvider value={{ onChange, value, type }}>
       {children}
-    </PickerContext.Provider>
+    </PickerProvider>
   )
 }
 

@@ -1,6 +1,6 @@
 import { memo } from "react"
 import { Radio, RadioProps } from "."
-import { FieldContext, useFieldContext } from "components/Form/context"
+import { FieldProvider, useFieldContext } from "components/Form/context"
 import { useFormContext } from "react-hook-form"
 
 //* radio form
@@ -12,7 +12,7 @@ type RadioFormProps = {
 const RadioForm = memo((props: RadioFormProps) => {
   const { children, ...rest } = props
 
-  return <FieldContext.Provider value={rest}>{children}</FieldContext.Provider>
+  return <FieldProvider value={rest}>{children}</FieldProvider>
 })
 
 //* radio item

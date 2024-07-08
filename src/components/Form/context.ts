@@ -1,17 +1,17 @@
-import { createContext, useContext } from "react"
+import { createSharedContext } from "utils/shared-context"
 
 export type FieldContextType = {
   name: string
 }
 
-const FieldContext = createContext<FieldContextType | null>(null)
-const useFieldContext = () => {
-  const context = useContext(FieldContext)
-  if (!context) {
-    throw new Error("useFieldContext must be used within an FieldProvider")
-  }
+const [useFieldContext, FieldProvider] =
+  createSharedContext<FieldContextType>("field")
 
-  return context
+export type FormItemContextType = {
+  id: string
 }
 
-export { FieldContext, useFieldContext }
+const [useFormItemContext, FormItemProvider] =
+  createSharedContext<FormItemContextType>("form-item")
+
+export { FieldProvider, useFieldContext, useFormItemContext, FormItemProvider }

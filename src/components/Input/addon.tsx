@@ -33,6 +33,7 @@ const AddonRight = (props: React.PropsWithoutRef<InputAddonProps>) => {
   return <Addon {...props} side="right" />
 }
 
+//* addon variant
 const AddonClear = (props: React.PropsWithoutRef<InputAddonProps>) => {
   return (
     <Addon asChild {...props}>

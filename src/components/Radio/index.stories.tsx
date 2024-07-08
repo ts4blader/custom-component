@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { Radio } from "."
-import { useState } from "react"
 import { RadioGroup, RadioGroupItem } from "./group"
 import { RadioForm, RadioFormItem } from "./form"
-import { FormProvider, useForm } from "react-hook-form"
+import { useForm } from "react-hook-form"
 import { usePickerSingle } from "components/Picker/hook"
+import { Form, FormField } from "components/Form"
 
 const sizes = ["sm", "md", "lg"] as const
 const themes = ["default", "forest"] as const
@@ -75,24 +75,26 @@ export const Group = () => {
   )
 }
 
-export const Form = () => {
-  const form = useForm<{ color: string }>()
+export const FormIntegration = () => {
+  const form = useForm<{ color: string }>({
+    defaultValues: {
+      color: "green",
+    },
+  })
 
   return (
-    <FormProvider {...form}>
-      <RadioForm name="color">
-        <form
-          onSubmit={form.handleSubmit((data) => console.log(data))}
-          className="flex items-center space-x-5"
-        >
-          <RadioFormItem value="green">green</RadioFormItem>
-          <RadioFormItem value="yellow">yellow</RadioFormItem>
-          <RadioFormItem value="blue">blue</RadioFormItem>
-          <RadioFormItem value="red">red</RadioFormItem>
-
-          <button>Submit</button>
-        </form>
-      </RadioForm>
-    </FormProvider>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit((data) => alert(JSON.stringify(data)))}>
+        <RadioForm name="color">
+          <div className="flex items-center space-x-4">
+            <RadioFormItem value="green">green</RadioFormItem>
+            <RadioFormItem value="yellow">yellow</RadioFormItem>
+            <RadioFormItem value="blue">blue</RadioFormItem>
+            <RadioFormItem value="red">red</RadioFormItem>
+          </div>
+        </RadioForm>
+        <button className="block mt-3">Submit</button>
+      </form>
+    </Form>
   )
 }

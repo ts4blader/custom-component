@@ -1,7 +1,8 @@
 import { VariantProps } from "class-variance-authority"
-import React, { useContext } from "react"
+import React, { forwardRef } from "react"
 import { cn } from "utils/helper"
 import { inputVariant, wrapperVariant } from "./variant"
+import { createSharedContext } from "utils/shared-context"
 
 type InputProps = {
   children?: React.ReactNode
@@ -9,22 +10,14 @@ type InputProps = {
 } & Omit<React.ComponentProps<"input">, "size"> &
   VariantProps<typeof wrapperVariant>
 
-//* context
-const InputContext = React.createContext<InputProps>({})
-const useInputContext = () => {
-  const context = useContext(InputContext)
-  if (!context) {
-    throw new Error("useInputContext must be used within an InputProvider")
-  }
+const [useInputContext, InputProvider] =
+  createSharedContext<Omit<InputProps, "children">>("input")
 
-  return context
-}
-
-const Input = (props: InputProps) => {
+const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const { children, wrapperProps, theme, size, className, ...rest } = props
 
   return (
-    <InputContext.Provider value={props}>
+    <InputProvider value={props}>
       <div
         className={cn(
           wrapperVariant({ theme, size }),
@@ -34,7 +27,8 @@ const Input = (props: InputProps) => {
         {...wrapperProps}
       >
         <input
-          size={5}
+          ref={ref}
+          size={0}
           type="text"
           className={cn(inputVariant({ theme, size }), className)}
           {...rest}
@@ -42,11 +36,10 @@ const Input = (props: InputProps) => {
 
         {children}
       </div>
-    </InputContext.Provider>
+    </InputProvider>
   )
-}
+})
 
 const MemorizedInput = React.memo(Input)
-Input.DisplayName = "Input"
 
 export { MemorizedInput as Input, useInputContext }

@@ -1,7 +1,7 @@
 import { memo } from "react"
 import { Checkbox, CheckboxProps } from "."
 import { useFormContext } from "react-hook-form"
-import { FieldContext, useFieldContext } from "components/Form/context"
+import { FieldProvider, useFieldContext } from "components/Form/context"
 
 //* Checkbox form
 
@@ -13,7 +13,7 @@ type CheckboxFormProps = {
 const CheckboxForm = memo((props: CheckboxFormProps) => {
   const { children, ...rest } = props
 
-  return <FieldContext.Provider value={rest}>{children}</FieldContext.Provider>
+  return <FieldProvider value={rest}>{children}</FieldProvider>
 })
 
 //* Checkbox item

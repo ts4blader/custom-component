@@ -64,11 +64,15 @@ export const Group = () => {
 }
 
 export const Form = () => {
-  const form = useForm<{ color: string }>()
+  const form = useForm<{ color: string[] }>({
+    defaultValues: {
+      color: ["green", "blue"],
+    },
+  })
 
   return (
     <FormProvider {...form}>
-      <form onSubmit={form.handleSubmit((data) => console.log(data))}>
+      <form onSubmit={form.handleSubmit((data) => alert(JSON.stringify(data)))}>
         <CheckboxForm name="color">
           <div className="flex items-center space-x-5">
             <CheckboxFormItem value="green">green</CheckboxFormItem>

@@ -72,7 +72,7 @@ export const WithIcon = () => {
 export const WithClearIcon = () => {
   return (
     <Input className="min-w-[200px]" theme="default" placeholder="Enter email">
-      <AddonClear side="right" onClick={() => console.log("clear")} />
+      <AddonClear side="right" onClick={() => alert("clear")} />
     </Input>
   )
 }

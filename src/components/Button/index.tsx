@@ -2,7 +2,7 @@ import { VariantProps } from "class-variance-authority"
 import React, { forwardRef, memo } from "react"
 import { cn } from "utils/helper"
 import { buttonVariant } from "./variant"
-import { Spinner } from "components/Placeholder"
+import Spinner from "components/Spinner"
 
 type ButtonProps = {
   loading?: boolean
@@ -12,7 +12,16 @@ type ButtonProps = {
 const Button = memo(
   forwardRef<HTMLButtonElement, ButtonProps>(
     (
-      { type = "button", disabled, loading, theme, size, className, ...rest },
+      {
+        type = "button",
+        disabled,
+        loading,
+        theme,
+        size,
+        className,
+        children,
+        ...rest
+      },
       ref
     ) => {
       return (
@@ -23,7 +32,7 @@ const Button = memo(
           type={type}
           {...rest}
         >
-          {loading ? <Spinner /> : rest.children}
+          <Spinner loading={loading}>{children}</Spinner>
         </button>
       )
     }

@@ -3,7 +3,7 @@ import { Button } from "."
 import { LockKeyhole } from "lucide-react"
 
 const sizes = ["sm", "md", "lg"] as const
-const themes = ["default", "forest", "ghost"] as const
+const themes = ["solid", "soft", "ghost", "outline"] as const
 
 const meta = {
   title: "Components/Button",
@@ -31,7 +31,7 @@ type Story = StoryObj<typeof meta>
 export const ThemeDefault: Story = {
   args: {
     className: "min-w-[200px]",
-    theme: "default",
+    theme: "solid",
     size: "md",
     disabled: false,
     children: "Button",
@@ -41,7 +41,7 @@ export const ThemeDefault: Story = {
 
 export const WithIcon = () => {
   return (
-    <Button className="min-w-[200px]">
+    <Button theme="solid" className="min-w-[200px]">
       <LockKeyhole size={16} />
       <span>Button</span>
     </Button>

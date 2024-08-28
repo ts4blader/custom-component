@@ -2,16 +2,19 @@ import { cva } from "class-variance-authority"
 
 export const buttonVariant = cva(
   [
-    "inline-flex items-center justify-center space-x-3",
-    "disabled:cursor-not-allowed disabled:opacity-50",
+    "inline-flex items-center justify-center space-x-3 font-semibold",
+    "disabled:cursor-not-allowed disabled:bg-gray-400 disabled:text-white",
     "focus-visible:ring-offset-2 focus-visible:ring-2 focus-visible:outline-none",
   ],
   {
     variants: {
       theme: {
-        default: "bg-blue-500 text-white focus-visible:ring-blue-300",
-        forest: "bg-green-500 text-white focus-visible:ring-green-300",
-        ghost: "focus-visible:ring-blue-300",
+        solid:
+          "bg-accent text-white hover:bg-accent-400 focus-visible:ring-accent",
+        soft: "bg-accent/50 text-white hover:bg-accent/60 focus-visible:ring-accent",
+        ghost: "text-accent hover:bg-accent/20 focus-visible:ring-accent",
+        outline:
+          "text-accent border-[2px] border-current border-solid hover:bg-accent/20 focus-visible:ring-accent",
       },
 
       size: {
@@ -22,7 +25,7 @@ export const buttonVariant = cva(
     },
 
     defaultVariants: {
-      theme: "default",
+      theme: "solid",
       size: "md",
     },
   }

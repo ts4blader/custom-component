@@ -47,3 +47,15 @@ export const WithIcon = () => {
     </Button>
   )
 }
+
+export const Square = () => {
+  return (
+    <div className="flex items-center space-x-2">
+      {themes.map((item, index) => (
+        <Button key={index} theme={item} square>
+          <LockKeyhole size={20} />
+        </Button>
+      ))}
+    </div>
+  )
+}

@@ -4,21 +4,31 @@ import { cn } from "utils/helper"
 
 type SpinnerProps = {
   loading?: boolean
-} & React.ComponentProps<"span">
+  size?: number
+} & React.ComponentProps<"div">
 
 const Spinner = memo(
-  ({ loading = false, className, children, ...props }: SpinnerProps) => {
+  ({
+    loading = false,
+    size = 20,
+    className,
+    children,
+    ...props
+  }: SpinnerProps) => {
     if (!loading) return children
 
     return (
-      <span className={cn("relative text-center", className)} {...props}>
+      <div
+        className={cn("relative w-fit text-center min-h-5", className)}
+        {...props}
+      >
         <span className="invisible">{children}</span>
         <span className="absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-          <LoaderCircle className="animate-spin" size={20} />
+          <LoaderCircle className="animate-spin" size={size} />
         </span>
-      </span>
+      </div>
     )
   }
 )
 
-export default Spinner
+export { Spinner }

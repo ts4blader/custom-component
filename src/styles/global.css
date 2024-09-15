@@ -33,6 +33,13 @@ body {
   }
 
   .hidden-input {
-    @apply absolute top-0 left-0 w-0 h-0 opacity-0;
+    @apply absolute invisible w-0 h-0;
   }
 }
+
+/* .hidden-input {
+  position: absolute;
+  visibility: hidden;
+  width: 0;
+  height: 0;
+} */

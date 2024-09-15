@@ -1,10 +1,21 @@
 import { createContext, useContext } from "react"
 
-const createSharedContext = <T extends object>(name?: string) => {
+type Option = {
+  skipError?: boolean
+}
+
+const defaultOptions: Option = {
+  skipError: false,
+}
+
+const createSharedContext = <T extends object>(
+  name?: string,
+  options = defaultOptions
+) => {
   const nameStr = name || "shared"
   const Context = createContext<T | null>(null)
 
-  const useSharedContext = () => {
+  const useRequireContext = () => {
     const context = useContext(Context)
     if (!context) {
       throw new Error(
@@ -15,7 +26,9 @@ const createSharedContext = <T extends object>(name?: string) => {
     return context
   }
 
-  return [useSharedContext, Context.Provider] as const
+  const useOptionalContext = () => useContext(Context)
+
+  return [useRequireContext, Context.Provider, useOptionalContext] as const
 }
 
 export { createSharedContext }

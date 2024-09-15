@@ -1,34 +1,25 @@
-import { CheckboxProps } from "."
-import { boxVariant, iconVariant, wrapperVariant } from "./variant"
-import { Picker, PickerSelector } from "components/Picker"
-import { cn } from "utils/helper"
-import { Check } from "lucide-react"
+import { Picker, PickerType } from "components/Picker"
+import React, { forwardRef } from "react"
+import { Checkbox } from "."
 
-//* group
-const CheckboxGroup = Picker.Multiple
-
-//* item
-const CheckboxGroupItem = ({
-  theme,
-  size,
-  children,
-  wrapperProps,
-  ...rest
-}: React.PropsWithoutRef<CheckboxProps>) => {
-  return (
-    <PickerSelector
-      wrapperProps={{
-        className: cn(wrapperVariant(), wrapperProps?.className),
-        ...wrapperProps,
-      }}
-      {...rest}
-    >
-      <div className={cn(boxVariant({ theme, size }))}>
-        <Check className={cn(iconVariant({ size }))} />
-      </div>
-      {children}
-    </PickerSelector>
-  )
+const CheckboxGroupRoot = (props: React.ComponentProps<typeof Picker>) => {
+  return <Picker type={PickerType.multiple} {...props} />
 }
 
-export { CheckboxGroup, CheckboxGroupItem }
+type CheckboxGroupItemProps = {} & React.ComponentProps<typeof Picker.Control> &
+  React.ComponentProps<typeof Checkbox.Indicator>
+const CheckboxGroupItem = forwardRef<HTMLInputElement, CheckboxGroupItemProps>(
+  ({ value, ...props }, ref) => {
+    return (
+      <Picker.Control ref={ref} value={value}>
+        <Checkbox.Indicator value={value} {...props} />
+      </Picker.Control>
+    )
+  }
+)
+
+// export
+const CheckboxGroup = Object.assign(CheckboxGroupRoot, {
+  Item: CheckboxGroupItem,
+})
+export { CheckboxGroup }

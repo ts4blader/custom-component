@@ -2,7 +2,7 @@ import { VariantProps } from "class-variance-authority"
 import React, { forwardRef } from "react"
 import { cn } from "utils/helper"
 import { inputVariant, wrapperVariant } from "./variant"
-import { createSharedContext } from "utils/shared-context"
+import { createSharedContext } from "hooks/createShareContext"
 
 type InputProps = {
   children?: React.ReactNode

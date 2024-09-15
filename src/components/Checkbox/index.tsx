@@ -1,36 +1,67 @@
-import { forwardRef, memo } from "react"
-import { cn } from "utils/helper"
 import { VariantProps } from "class-variance-authority"
-import { boxVariant, iconVariant, wrapperVariant } from "./variant"
+import React, { forwardRef, memo, useId, useMemo } from "react"
+import { checkboxVariants } from "./variant"
+import { cn } from "utils/helper"
 import { Check } from "lucide-react"
-import { PickerSkin, PickerSkinProps } from "components/Picker"
+import { createSharedContext } from "hooks/createShareContext"
 
-//* checkbox
+type CheckboxContext = { id?: string }
+const [_, Provider, useCheckbox] =
+  createSharedContext<CheckboxContext>("Checkbox")
 
-export type CheckboxProps = Omit<PickerSkinProps, "size" | "type"> &
-  VariantProps<typeof boxVariant>
+type CheckboxProps = CheckboxContext & {
+  children?: React.ReactNode
+}
 
-const Checkbox = memo(
-  forwardRef<HTMLInputElement, CheckboxProps>(
-    ({ theme, size, children, wrapperProps, ...rest }, ref) => {
+const CheckboxRoot = memo(({ id, children }: CheckboxProps) => {
+  const _id = useId()
+  const elementID = useMemo(() => id || _id, [id, _id])
+
+  return <Provider value={{ id: elementID }}>{children}</Provider>
+})
+CheckboxRoot.displayName = "Checkbox"
+
+type CheckboxIndicatorProps = Omit<React.ComponentProps<"input">, "size"> & {
+  children?: React.ReactNode
+} & VariantProps<typeof checkboxVariants>
+const CheckboxIndicator = memo(
+  forwardRef<HTMLInputElement, CheckboxIndicatorProps>(
+    ({ children, variant, size, className, ...props }, ref) => {
+      const context = useCheckbox()
+
       return (
-        <PickerSkin
-          ref={ref}
-          type="checkbox"
-          wrapperProps={{
-            className: cn(wrapperVariant(), wrapperProps?.className),
-            ...wrapperProps,
-          }}
-          {...rest}
-        >
-          <div className={cn(boxVariant({ theme, size }))}>
-            <Check className={cn(iconVariant({ size }))} />
+        <>
+          <input
+            id={context?.id}
+            ref={ref}
+            type="checkbox"
+            className="hidden-input peer"
+            {...props}
+          />
+          <div className={cn(checkboxVariants({ variant, size }), className)}>
+            {children || <Check size={12} />}
           </div>
-          {children}
-        </PickerSkin>
+        </>
       )
     }
   )
 )
+CheckboxIndicator.displayName = "CheckboxIndicator"
+
+type CheckboxLabelProps = React.ComponentProps<"label">
+const CheckboxLabel = memo(
+  forwardRef<HTMLLabelElement, CheckboxLabelProps>(({ ...props }, ref) => {
+    const context = useCheckbox()
+
+    return <label htmlFor={context?.id} ref={ref} {...props} />
+  })
+)
+CheckboxLabel.displayName = "CheckboxLabel"
+
+// export
+const Checkbox = Object.assign(CheckboxRoot, {
+  Label: CheckboxLabel,
+  Indicator: CheckboxIndicator,
+})
 
 export { Checkbox }

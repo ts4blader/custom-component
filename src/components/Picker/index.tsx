@@ -1,26 +1,7 @@
-import React, { ChangeEvent, forwardRef, memo, useMemo } from "react"
-import { createSharedContext } from "utils/shared-context"
-
-//* skin
-export type PickerSkinProps = {
-  children: React.ReactNode
-  wrapperProps?: React.ComponentProps<"label">
-} & React.ComponentProps<"input">
-
-const PickerSkin = forwardRef<HTMLInputElement, PickerSkinProps>(
-  ({ className, children, wrapperProps, ...rest }, ref) => {
-    return (
-      <label
-        aria-selected={rest.checked}
-        aria-disabled={rest.disabled}
-        {...wrapperProps}
-      >
-        <input ref={ref} className="hidden-input peer" {...rest} />
-        {children}
-      </label>
-    )
-  }
-)
+import { Slot } from "@radix-ui/react-slot"
+import { createSharedContext } from "hooks/createShareContext"
+import React, { ChangeEvent, forwardRef, memo, useCallback } from "react"
+import { cn } from "utils/helper"
 
 //* picker
 export enum PickerType {
@@ -28,8 +9,10 @@ export enum PickerType {
   multiple = "checkbox",
 }
 
+type InputValue = React.ComponentProps<"input">["value"]
+
 export type PickerProps = {
-  value: React.ComponentProps<"input">["value"]
+  value: InputValue
   onChange: (e: ChangeEvent<HTMLInputElement>) => void
   type?: PickerType
   children: React.ReactNode
@@ -38,55 +21,90 @@ export type PickerProps = {
 const [usePickerContext, PickerProvider] =
   createSharedContext<Omit<PickerProps, "children">>("picker")
 
-const Picker = ({
-  onChange,
-  value,
-  type = PickerType.single,
-  children,
-}: PickerProps) => {
-  return (
-    <PickerProvider value={{ onChange, value, type }}>
-      {children}
-    </PickerProvider>
-  )
-}
+const usePickerDerived = () => {
+  const { value, type } = usePickerContext()
 
-//* selector
-type PickerSelectorProps = PickerSkinProps
-
-const PickerSelector = memo(
-  forwardRef<HTMLInputElement, PickerSelectorProps>(({ ...rest }, ref) => {
-    const { onChange, value, type } = usePickerContext()
-
-    const isChecked = useMemo(() => {
+  const getChecked = useCallback(
+    (current: InputValue) => {
       if (type === PickerType.multiple && Array.isArray(value)) {
-        return value.includes(rest.value)
+        return value.includes(current)
       }
 
       if (type === PickerType.single && !Array.isArray(value)) {
-        return value === rest.value
+        return value === current
       }
 
       return false
-    }, [value, rest.value])
+    },
+    [value, type]
+  )
+
+  return { getChecked }
+}
+
+//* root
+const PickerRoot = memo(
+  ({ onChange, value, type = PickerType.single, children }: PickerProps) => {
+    return (
+      <PickerProvider value={{ onChange, value, type }}>
+        {children}
+      </PickerProvider>
+    )
+  }
+)
+
+//* selector
+type PickerSelectorProps = {
+  value: InputValue
+} & React.ComponentProps<"label">
+
+const PickerSelector = memo(
+  forwardRef<HTMLLabelElement, PickerSelectorProps>(
+    ({ className, children, ...rest }, ref) => {
+      const { getChecked } = usePickerDerived()
+
+      return (
+        <label
+          ref={ref}
+          aria-selected={getChecked(rest.value)}
+          className={cn("relative hover:cursor-pointer", className)}
+          {...rest}
+        >
+          <PickerControl value={rest.value} />
+          {children}
+        </label>
+      )
+    }
+  )
+)
+
+//* control
+type PickerControlProps = {
+  value: InputValue
+  children?: React.ReactNode
+}
+const PickerControl = memo(
+  forwardRef<HTMLInputElement, PickerControlProps>((props, ref) => {
+    const Comp = props.children ? Slot : "input"
+    const { onChange, type } = usePickerContext()
+    const { getChecked } = usePickerDerived()
 
     return (
-      <PickerSkin
+      <Comp
         ref={ref}
-        checked={isChecked}
+        value={props.value}
+        checked={getChecked(props.value)}
         type={type}
         onChange={onChange}
-        {...rest}
+        className="hidden peer"
       />
     )
   })
 )
 
-Picker.Single = memo((props: PickerProps) => (
-  <Picker type={PickerType.single} {...props} />
-))
-Picker.Multiple = memo((props: PickerProps) => (
-  <Picker type={PickerType.multiple} {...props} />
-))
-
-export { Picker, usePickerContext, PickerSelector, PickerSkin }
+// export
+const Picker = Object.assign(PickerRoot, {
+  Selector: PickerSelector,
+  Control: PickerControl,
+})
+export { Picker, usePickerContext, usePickerDerived }

@@ -1,88 +1,44 @@
 import { cva } from "class-variance-authority"
 
 export const wrapperVariant = cva(
-  ["input-wrapper", "inline-flex items-center rounded-lg overflow-hidden"],
+  [
+    "input-wrapper",
+    "inline-flex items-center rounded-lg",
+    "focus-within:ring-2 focus-within:ring-offset-1",
+  ],
   {
     variants: {
-      theme: {
+      variant: {
         default:
-          "border border-solid border-slate-300 focus-within:ring-2 focus-within:ring-blue-300 focus-within:ring-offset-1 text-slate-800",
+          "border border-solid border-slate-300 focus-within:ring-accent text-slate-800",
       },
 
       size: {
-        sm: "h-8 text-sm",
-        md: "h-9 text-sm",
-        lg: "h-10",
+        sm: "h-8 text-sm space-x-3",
+        md: "h-9 text-sm space-x-4",
+        lg: "h-10 space-x-4",
       },
     },
 
     defaultVariants: {
-      theme: "default",
+      variant: "default",
       size: "md",
     },
   }
 )
 
-export const addonVariant = cva(
-  ["input-addon", "inline-flex items-center self-stretch"],
-  {
-    variants: {
-      side: {
-        left: "order-1 rounded-l-lg",
-        right: "order-3 rounded-r-lg",
-      },
-
-      theme: {
-        default: "bg-slate-100",
-      },
-
-      type: {
-        none: "",
-        seemless: "bg-transparent",
-        border: "",
-      },
-
-      size: {
-        sm: "px-3",
-        md: "px-3",
-        lg: "px-4",
-      },
+export const addonVariant = cva(["input-addon"], {
+  variants: {
+    side: {
+      left: "order-1",
+      right: "order-3",
     },
+  },
 
-    compoundVariants: [
-      {
-        type: "seemless",
-        side: "left",
-        className: "pr-0",
-      },
-
-      {
-        type: "seemless",
-        side: "right",
-        className: "pl-0",
-      },
-
-      {
-        type: "border",
-        side: "left",
-        className: "border-r border-r-slate-300",
-      },
-
-      {
-        type: "border",
-        side: "right",
-        className: "border-l border-l-slate-300",
-      },
-    ],
-
-    defaultVariants: {
-      theme: "default",
-      size: "md",
-      side: "left",
-      type: "none",
-    },
-  }
-)
+  defaultVariants: {
+    side: "left",
+  },
+})
 
 export const inputVariant = cva(
   [
@@ -91,19 +47,12 @@ export const inputVariant = cva(
   ],
   {
     variants: {
-      theme: {
+      variant: {
         default: "file:bg-slate-200",
-      },
-
-      size: {
-        sm: "mx-3",
-        md: "mx-3",
-        lg: "mx-4",
       },
     },
     defaultVariants: {
-      theme: "default",
-      size: "md",
+      variant: "default",
     },
   }
 )

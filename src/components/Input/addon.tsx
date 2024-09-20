@@ -1,47 +1,37 @@
-import React, { memo } from "react"
-import { useInputContext } from "."
-import { cn } from "utils/helper"
-import { addonVariant } from "./variant"
-import { Slot } from "@radix-ui/react-slot"
-import { VariantProps } from "class-variance-authority"
-import { CircleX } from "lucide-react"
+import React from "react"
+import { CircleX, Eye, LockKeyhole } from "lucide-react"
+import { Input } from "."
 
-type InputAddonProps = {
-  asChild?: boolean
-} & React.ComponentProps<"span"> &
-  VariantProps<typeof addonVariant>
-
-const Addon = memo(
-  ({ asChild, type, side, className, ...rest }: InputAddonProps) => {
-    const { size, theme } = useInputContext()
-    const Comp = asChild ? Slot : "span"
-
-    return (
-      <Comp
-        className={cn(addonVariant({ theme, size, side, type }), className)}
-        {...rest}
-      />
-    )
-  }
-)
-
-const AddonLeft = (props: React.PropsWithoutRef<InputAddonProps>) => {
-  return <Addon {...props} side="left" />
-}
-
-const AddonRight = (props: React.PropsWithoutRef<InputAddonProps>) => {
-  return <Addon {...props} side="right" />
-}
-
-//* addon variant
-const AddonClear = (props: React.PropsWithoutRef<InputAddonProps>) => {
+const AddonClear = ({
+  onClear,
+  ...props
+}: React.PropsWithoutRef<typeof Input.Addon> & {
+  onClear: () => void
+}) => {
   return (
-    <Addon asChild {...props}>
-      <button>
+    <Input.Addon asChild {...props}>
+      <button onClick={onClear}>
         <CircleX size={16} />
       </button>
-    </Addon>
+    </Input.Addon>
   )
 }
 
-export { Addon, AddonLeft, AddonRight, AddonClear }
+const AddonPassword = ({
+  value,
+  onToggle,
+  ...props
+}: React.PropsWithoutRef<typeof Input.Addon> & {
+  value: boolean
+  onToggle: () => void
+}) => {
+  return (
+    <Input.Addon asChild {...props}>
+      <button onClick={onToggle}>
+        {value ? <LockKeyhole size={16} /> : <Eye size={16} />}
+      </button>
+    </Input.Addon>
+  )
+}
+
+export { AddonClear, AddonPassword }

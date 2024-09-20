@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { Checkbox } from "."
-import { Checkbox as CheckboxCommon } from "./common"
+import { Picker, PickerMultiple } from "components/Picker"
+import { usePickerMultiple } from "hooks/usePicker"
 
 const meta = {
   title: "Components/Checkbox",
@@ -35,25 +36,26 @@ export const Default = () => {
   )
 }
 
-export const Common = () => {
+export const Group = () => {
+  const picker = usePickerMultiple()
+
+  console.log(picker.value)
+
   return (
-    <>
-      <h2 className="my-4 text-lg font-semibold">With text</h2>
+    <PickerMultiple value={picker.value} onChange={picker.handleChange}>
       <div className="flex items-center space-x-3">
-        <CheckboxCommon checked />
+        <Picker.Control value="Green">
+          <Checkbox>Green</Checkbox>
+        </Picker.Control>
+
+        <Picker.Control value="Red">
+          <Checkbox>Red</Checkbox>
+        </Picker.Control>
+
+        <Picker.Control value="Blue">
+          <Checkbox>Blue</Checkbox>
+        </Picker.Control>
       </div>
-
-      <h2 className="my-4 text-lg font-semibold">Size</h2>
-      <div className="flex items-center space-x-3">
-        <CheckboxCommon size="sm" defaultChecked />
-        <CheckboxCommon size="sm" />
-
-        <CheckboxCommon size="md" defaultChecked />
-        <CheckboxCommon size="md" />
-
-        <CheckboxCommon size="lg" defaultChecked />
-        <CheckboxCommon size="lg" />
-      </div>
-    </>
+    </PickerMultiple>
   )
 }

@@ -2,14 +2,20 @@ import { ChangeEvent, useCallback, useState } from "react"
 import { useList } from "react-use"
 
 type SingleOption = {
-  initialValue: string
+  initialValue?: string
 }
+
+const defaultSingle: SingleOption = {}
 
 type MultipleOption = {
-  initialValue: string[]
+  initialValue?: string[]
 }
 
-const usePickerSingle = ({ initialValue }: SingleOption) => {
+const defaultMultiple: MultipleOption = {
+  initialValue: [],
+}
+
+const usePickerSingle = ({ initialValue } = defaultSingle) => {
   const [value, setValue] = useState(initialValue)
 
   const handleChange = useCallback((e: ChangeEvent<HTMLInputElement>) => {
@@ -19,8 +25,8 @@ const usePickerSingle = ({ initialValue }: SingleOption) => {
   return { value, handleChange }
 }
 
-const usePickerMultiple = ({ initialValue }: MultipleOption) => {
-  const [value, { push, removeAt }] = useList<string>(initialValue)
+const usePickerMultiple = ({ initialValue } = defaultMultiple) => {
+  const [value, { set, push, removeAt }] = useList<string>(initialValue)
 
   const handleChange = useCallback(
     (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,7 +40,7 @@ const usePickerMultiple = ({ initialValue }: MultipleOption) => {
     [value]
   )
 
-  return { value, handleChange }
+  return { value, handleChange, setValue: set }
 }
 
 export { usePickerSingle, usePickerMultiple }

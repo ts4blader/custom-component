@@ -1,6 +1,5 @@
-import { Slot } from "@radix-ui/react-slot"
 import { createSharedContext } from "hooks/createShareContext"
-import React, { ChangeEvent, forwardRef, memo, useCallback } from "react"
+import React, { forwardRef, memo, useCallback } from "react"
 import { cn } from "utils/helper"
 
 //* picker
@@ -10,10 +9,11 @@ export enum PickerType {
 }
 
 type InputValue = React.ComponentProps<"input">["value"]
+type InputOnChange = React.ComponentProps<"input">["onChange"]
 
 export type PickerProps = {
   value: InputValue
-  onChange: (e: ChangeEvent<HTMLInputElement>) => void
+  onChange: InputOnChange
   type?: PickerType
   children: React.ReactNode
 }
@@ -61,6 +61,7 @@ type PickerSelectorProps = {
 const PickerSelector = memo(
   forwardRef<HTMLLabelElement, PickerSelectorProps>(
     ({ className, children, ...rest }, ref) => {
+      const { onChange, type, value } = usePickerContext()
       const { getChecked } = usePickerDerived()
 
       return (
@@ -70,7 +71,13 @@ const PickerSelector = memo(
           className={cn("relative hover:cursor-pointer", className)}
           {...rest}
         >
-          <PickerControl value={rest.value} />
+          <input
+            value={value}
+            checked={getChecked(value)}
+            type={type}
+            onChange={onChange}
+            className="hidden peer"
+          />
           {children}
         </label>
       )
@@ -81,25 +88,22 @@ const PickerSelector = memo(
 //* control
 type PickerControlProps = {
   value: InputValue
-  children?: React.ReactNode
+  children: React.ReactElement
 }
-const PickerControl = memo(
-  forwardRef<HTMLInputElement, PickerControlProps>((props, ref) => {
-    const Comp = props.children ? Slot : "input"
-    const { onChange, type } = usePickerContext()
-    const { getChecked } = usePickerDerived()
+const PickerControl = memo(({ value, children }: PickerControlProps) => {
+  const { onChange, type } = usePickerContext()
+  const { getChecked } = usePickerDerived()
 
-    return (
-      <Comp
-        ref={ref}
-        value={props.value}
-        checked={getChecked(props.value)}
-        type={type}
-        onChange={onChange}
-        className="hidden peer"
-      />
-    )
+  return React.cloneElement(children, {
+    value,
+    checked: getChecked(value),
+    type,
+    onChange,
   })
+})
+
+const PickerMultiple = (props: React.ComponentProps<typeof Picker>) => (
+  <Picker {...props} type={PickerType.multiple} />
 )
 
 // export
@@ -107,4 +111,4 @@ const Picker = Object.assign(PickerRoot, {
   Selector: PickerSelector,
   Control: PickerControl,
 })
-export { Picker, usePickerContext, usePickerDerived }
+export { Picker, usePickerContext, usePickerDerived, PickerMultiple }

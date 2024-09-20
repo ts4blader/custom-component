@@ -24,8 +24,9 @@ const Checkbox = memo(
             {...props}
           />
           <div className={cn(checkboxVariants({ variant, size }), className)}>
-            {children || <Check size={12} />}
+            <Check size={12} />
           </div>
+          {children}
         </label>
       )
     }

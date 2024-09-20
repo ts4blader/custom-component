@@ -14,18 +14,6 @@ import {
 } from "./context"
 import { cn } from "utils/helper"
 
-//* provider
-const Form = FormProvider
-
-//* field
-const FormField = (props: ControllerProps) => {
-  return (
-    <FieldProvider value={{ name: props.name }}>
-      <Controller {...props} />
-    </FieldProvider>
-  )
-}
-
 //* merged hook
 const useFormField = () => {
   const { name } = useFieldContext()
@@ -42,6 +30,18 @@ const useFormField = () => {
     formMessageId: `${id}-form-item-message`,
     ...fieldState,
   }
+}
+
+//* provider
+const FormRoot = FormProvider
+
+//* field
+const FormField = (props: ControllerProps) => {
+  return (
+    <FieldProvider value={{ name: props.name }}>
+      <Controller {...props} />
+    </FieldProvider>
+  )
 }
 
 //* item
@@ -137,14 +137,14 @@ const FormDescription = memo(
 const FormError = forwardRef<HTMLParagraphElement, React.ComponentProps<"p">>(
   ({ className, children, ...props }, ref) => {
     const { error, formMessageId } = useFormField()
-    const body = error ? String(error?.message) : children
+    const body = error ? String(error.message) : children
 
     return (
       <p
         ref={ref}
         id={formMessageId}
         className={cn(
-          "text-sm font-medium text-destructive empty:hidden",
+          "text-sm font-medium text-red-500 empty:hidden",
           className
         )}
         {...props}
@@ -155,13 +155,14 @@ const FormError = forwardRef<HTMLParagraphElement, React.ComponentProps<"p">>(
   }
 )
 
-export {
-  useFormField,
-  Form,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormDescription,
-  FormError,
-  FormField,
-}
+// export
+const Form = Object.assign(FormRoot, {
+  Field: FormField,
+  Item: FormItem,
+  Label: FormLabel,
+  Control: FormControl,
+  Desc: FormDescription,
+  Error: FormError,
+})
+
+export { useFormField, Form }

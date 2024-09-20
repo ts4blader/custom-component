@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react"
 import { Checkbox } from "."
-import { CheckboxStandard } from "./standard"
+import { Checkbox as CheckboxCommon } from "./common"
 
 const meta = {
   title: "Components/Checkbox",
@@ -14,33 +14,45 @@ type Story = StoryObj<typeof meta>
 
 export const Default = () => {
   return (
-    <Checkbox>
-      <div className="flex items-center">
-        <Checkbox.Indicator className="mr-2" size="md" variant="default" />
-        <Checkbox.Label>Checkbox</Checkbox.Label>
-      </div>
-    </Checkbox>
-  )
-}
-
-export const Standard = () => {
-  return (
     <>
       <h2 className="my-4 text-lg font-semibold">With text</h2>
       <div className="flex items-center space-x-3">
-        <CheckboxStandard>Checkbox</CheckboxStandard>
+        <Checkbox>Checkbox</Checkbox>
       </div>
 
       <h2 className="my-4 text-lg font-semibold">Size</h2>
       <div className="flex items-center space-x-3">
-        <CheckboxStandard size="sm" defaultChecked />
-        <CheckboxStandard size="sm" />
+        <Checkbox size="sm" defaultChecked />
+        <Checkbox size="sm" />
 
-        <CheckboxStandard size="md" defaultChecked />
-        <CheckboxStandard size="md" />
+        <Checkbox size="md" defaultChecked />
+        <Checkbox size="md" />
 
-        <CheckboxStandard size="lg" defaultChecked />
-        <CheckboxStandard size="lg" />
+        <Checkbox size="lg" defaultChecked />
+        <Checkbox size="lg" />
+      </div>
+    </>
+  )
+}
+
+export const Common = () => {
+  return (
+    <>
+      <h2 className="my-4 text-lg font-semibold">With text</h2>
+      <div className="flex items-center space-x-3">
+        <CheckboxCommon checked />
+      </div>
+
+      <h2 className="my-4 text-lg font-semibold">Size</h2>
+      <div className="flex items-center space-x-3">
+        <CheckboxCommon size="sm" defaultChecked />
+        <CheckboxCommon size="sm" />
+
+        <CheckboxCommon size="md" defaultChecked />
+        <CheckboxCommon size="md" />
+
+        <CheckboxCommon size="lg" defaultChecked />
+        <CheckboxCommon size="lg" />
       </div>
     </>
   )

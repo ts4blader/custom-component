@@ -1,32 +1,34 @@
-import { forwardRef, memo } from "react"
-import { cn } from "utils/helper"
 import { VariantProps } from "class-variance-authority"
-import { boxVariant, wrapperVariant } from "./variant"
-import { PickerSkin, PickerSkinProps } from "components/Picker"
+import React, { forwardRef, memo } from "react"
+import { radioVariant } from "./variant"
+import { cn } from "utils/helper"
 
-//* radio
-export type RadioProps = Omit<PickerSkinProps, "type" | "size"> &
-  VariantProps<typeof boxVariant>
+type RadioProps = Omit<React.ComponentProps<"input">, "size"> & {
+  children?: React.ReactNode
+  wrapperProps?: React.ComponentProps<"label">
+} & VariantProps<typeof radioVariant>
 
 const Radio = memo(
   forwardRef<HTMLInputElement, RadioProps>(
-    ({ theme, size, children, wrapperProps, ...rest }, ref) => {
+    ({ children, wrapperProps, variant, size, className, ...props }, ref) => {
       return (
-        <PickerSkin
-          ref={ref}
-          type="radio"
-          wrapperProps={{
-            className: cn(wrapperVariant(), wrapperProps?.className),
-            ...wrapperProps,
-          }}
-          {...rest}
+        <label
+          className={cn("flex items-center", wrapperProps?.className)}
+          {...wrapperProps}
         >
-          <span className={cn(boxVariant({ theme, size }))} />
+          <input
+            ref={ref}
+            type="radio"
+            className="hidden-input peer"
+            {...props}
+          />
+          <div className={cn(radioVariant({ variant, size }), className)} />
           {children}
-        </PickerSkin>
+        </label>
       )
     }
   )
 )
+Radio.displayName = "Radio"
 
 export { Radio }
